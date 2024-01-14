@@ -6,7 +6,7 @@ function init(){
     });
 }
 
-$(document).ready(function(){
+$(document).ready(function(){ 
     tabla=$('#producto_data').dataTable({
 		"aProcessing": true,//Activamos el procesamiento del datatables
 	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
@@ -67,14 +67,14 @@ function guardaryeditar(e){
         contentType: false,
         processData: false,
         success: function(datos){
-            console.log(datos)
+
             $('#producto_form')[0].reset();
             $("#modalmantenimiento").modal('hide');
             $('#producto_data').DataTable().ajax.reload();
 
             swal.fire(
                 'Registro!',
-                'Se registró correctamente.',
+                'El registro correctamente.',
                 'success'
             )
         }
@@ -82,12 +82,19 @@ function guardaryeditar(e){
 }
 
 function editar(prod_id){
-    console.log(prod_id)
+    $.post("../../controller/producto.php?op=mostrar",{prod_id:prod_id},function (data) {
+        data = JSON.parse(data);
+        $('#prod_id').val(data.prod_id);
+        $('#prod_nom').val(data.prod_nom);
+        $('#prod_desc').val(data.prod_desc);
+    });
+    $('#mdltitulo').html('Editar Registro');
+    $('#modalmantenimiento').modal('show');
 }
 
 function eliminar(prod_id){
     swal.fire({
-        title: 'USUARIO',
+        title: 'CRUD',
         text: "Desea Eliminar el Registro?",
         icon: 'error',
         showCancelButton: true,
@@ -105,7 +112,7 @@ function eliminar(prod_id){
 
             swal.fire(
                 'Eliminado!',
-                'El registro se eliminó correctamente.',
+                'El registro se elimino correctamente.',
                 'success'
             )
         }
@@ -113,10 +120,9 @@ function eliminar(prod_id){
 }
 
 $(document).on("click","#btnnuevo", function(){
+    $('#prod_id').val('');
     $('#mdltitulo').html('Nuevo Registro');
     $('#modalmantenimiento').modal('show');
 });
-
-
 
 init();
